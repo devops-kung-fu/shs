@@ -1,0 +1,30 @@
+name: SHS Tests
+on: push
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.15'
+      - name: Install Dependencies
+        run: |
+          go version
+          go get -u golang.org/x/lint/golint
+      - name: Build
+        run: go build
+      - name: Vet
+        run: go vet
+      - name: Lint
+        run: golint
+      - name: Tests
+        run: |
+          go test -v -race -coverprofile=coverage.out -covermode=atomic
+          go tool cover -func=coverage.out
+      - name: CodeCov
+        run: bash <(curl -s https://codecov.io/bash)
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -1,0 +1,7 @@
+@startuml
+
+actor cli
+
+participant api
+
+@enduml
