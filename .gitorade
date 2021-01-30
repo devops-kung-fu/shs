@@ -3,5 +3,4 @@ git add .
 git commit -S -m "$2"
 git push origin $1
 git tag -a $3 -m "$2"
-git tag -a calculate/$3 -m "$2"
 git push origin --tags
