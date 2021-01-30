@@ -4,5 +4,6 @@ go 1.15
 
 require (
 	github.com/devops-kung-fu/go-shs v0.0.2 // indirect
+	github.com/devops-kung-fu/go-shs/calculate v0.1.2
 	github.com/spf13/cobra v1.1.1
 )
