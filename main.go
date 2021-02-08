@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/djschleen/shs/cmd"
+	"github.com/devops-kung-fu/shs/cmd"
 )
 
 func main() {
