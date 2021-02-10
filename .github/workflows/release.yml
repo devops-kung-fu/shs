@@ -29,8 +29,8 @@ jobs:
           go-version: '1.15'
       - name: Build Assets
         run: |
-          echo "Darwin arm64"
-          env GOOS=darwin GOARCH=arm64 go build -o build/shs-${{ github.ref }}-darwin-arm64 github.com/devops-kung-fu/shs
+          #echo "Darwin arm64"
+          #env GOOS=darwin GOARCH=arm64 go build -o build/shs-${{ github.ref }}-darwin-arm64 github.com/devops-kung-fu/shs
           echo "Darwin amd64"
           env GOOS=darwin GOARCH=amd64 go build -o build/shs-${{ github.ref }}-darwin-amd64 github.com/devops-kung-fu/shs
           echo "FreeBSD amd64"
