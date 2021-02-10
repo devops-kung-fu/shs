@@ -23,3 +23,150 @@ jobs:
             - Release flow.
           draft: false
           prerelease: false
+      - name: Build Assets
+        run: |
+          echo "Darwin arm64"
+          env GOOS=darwin GOARCH=arm64 go build -o build/shs-${{ github.ref }}-darwin-arm64 github.com/devops-kung-fu/shs
+          echo "Darwin amd64"
+          env GOOS=darwin GOARCH=amd64 go build -o build/shs-${{ github.ref }}-darwin-amd64 github.com/devops-kung-fu/shs
+          echo "FreeBSD amd64"
+          env GOOS=freebsd GOARCH=amd64 go build -o build/shs-${{ github.ref }}-freebsd-amd64 github.com/devops-kung-fu/shs
+          echo "FreeBSD arm"
+          env GOOS=freebsd GOARCH=arm go build -o build/shs-${{ github.ref }}-freebsd-arm github.com/devops-kung-fu/shs
+          echo "Linux amd64"
+          env GOOS=linux GOARCH=amd64 go build -o build/shs-${{ github.ref }}-linux-amd64 github.com/devops-kung-fu/shs
+          echo "Linux arm64"
+          env GOOS=linux GOARCH=arm64 go build -o build/shs-${{ github.ref }}-linux-arm64 github.com/devops-kung-fu/shs
+          echo "NetBSD amd64"
+          env GOOS=netbsd GOARCH=amd64 go build -o build/shs-${{ github.ref }}-netbsd-amd64 github.com/devops-kung-fu/shs
+          echo "NetBSD arm"
+          env GOOS=netbsd GOARCH=arm go build -o build/shs-${{ github.ref }}-netbsd-arm github.com/devops-kung-fu/shs
+          echo "OpenBSD amd64"
+          env GOOS=openbsd GOARCH=amd64 go build -o build/shs-${{ github.ref }}-openbsd-amd64 github.com/devops-kung-fu/shs
+          echo "OpenBSD arm"
+          env GOOS=openbsd GOARCH=arm go build -o build/shs-${{ github.ref }}-openbsd-arm github.com/devops-kung-fu/shs
+          echo "Windows amd64"
+          env GOOS=windows GOARCH=amd64 go build -o build/shs-${{ github.ref }}-windows-amd64 github.com/devops-kung-fu/shs
+      - name: Upload Darwin arm64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-arm64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload FreeBSD amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-freebsd-amd64'
+          type: 'application/octet-stream'
+      - name: Upload FreeBSD arm
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-freebsd-arm'
+          type: 'application/octet-stream'
+
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+
+
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
+      - name: Upload Darwin amd64
+        uses: gacts/upload-to-release@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          file: 'build/shs-${{ github.ref }}-darwin-amd64'
+          type: 'application/octet-stream'
