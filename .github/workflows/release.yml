@@ -87,7 +87,7 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: $(file -b --mime-type build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-amd64)" \
             --data-binary @build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-amd64 \
-            "${{ steps.create_release.outputs.upload_url }}?name=$(basename build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-amd64"
+            "${{ steps.create_release.outputs.upload_url }}?name=$(basename build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-amd64)"
 
       - name: Upload FreeBSD amd64
         uses: gacts/upload-to-release@v1.0.1
