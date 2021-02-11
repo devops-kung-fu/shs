@@ -28,7 +28,7 @@ jobs:
           prerelease: false
 
       - name: Echo upload url
-        run: echo "${{ steps.create_release.outputs.upload_url }}""
+        run: echo "${{ steps.create_release.outputs.upload_url }}"
 
       - name: Setup Go
         uses: actions/setup-go@v2
