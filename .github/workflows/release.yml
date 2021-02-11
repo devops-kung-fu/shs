@@ -29,7 +29,7 @@ jobs:
 
       - name: Fix Upload URL
         id: upload_url
-        run: echo ::set-output upload_url=VERSION::${${{ steps.create_release.outputs.upload_url }}/{?name,label}/}
+        run: echo ::set-output name=upload_url::${${{ steps.create_release.outputs.upload_url }}/{?name,label}/}
 
       - name: Echo upload url
         run: echo "${{ steps.upload_url.outputs.upload_url }}"
