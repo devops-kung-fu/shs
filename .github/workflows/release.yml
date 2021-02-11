@@ -27,8 +27,12 @@ jobs:
           draft: false
           prerelease: false
 
+      - name: Fix Upload URL
+        id: upload_url
+        run: echo ::set-output upload_url=VERSION::${${{ steps.create_release.outputs.upload_url }}/{?name,label}/}
+
       - name: Echo upload url
-        run: echo "${{ steps.create_release.outputs.upload_url }}"
+        run: echo "${{ steps.upload_url.outputs.upload_url }}"
 
       - name: Setup Go
         uses: actions/setup-go@v2
