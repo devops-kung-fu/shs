@@ -53,27 +53,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Create Release
-      #   id: create_release
-      #   uses: actions/create-release@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     tag_name: ${{ github.ref }}
-      #     release_name: Release ${{ github.ref }}
-      #     body: |
-      #       This release has the following changes:
-      #       - Release flow.
-      #     draft: false
-      #     prerelease: false
-
-      # - name: Fix Upload URL
-      #   id: upload_url
-      #   run: echo ::set-output name=upload_url::$(echo "${{ steps.create_release.outputs.upload_url }}" | cut -d"{" -f1)
-
-      # - name: Echo upload url
-      #   run: echo "${{ steps.upload_url.outputs.upload_url }}"
-
       - name: Setup Go
         uses: actions/setup-go@v2
         with:
