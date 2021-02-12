@@ -7,6 +7,12 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        targets: ["darwin-amd64", "freebsd-amd64", "linux-amd64", ]
+        os: ["darwin", "freebsd", "linux", "netbsd", "openbsd", "windows"]
+        arch: ["amd64", "arm64", "arm"]
+
     name: Create Release
     runs-on: ubuntu-latest
     steps:
@@ -43,124 +49,70 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
 
-      - name: Build Assets
+      - name: Build amd64 Assets
+        if: ${{ matrix.arch == "amd64" }}
         run: |
-          #echo "Darwin arm64"
-          #env GOOS=darwin GOARCH=arm64 go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-arm64 github.com/devops-kung-fu/shs
-          echo "Darwin amd64"
-          env GOOS=darwin GOARCH=amd64 go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-amd64 github.com/devops-kung-fu/shs
-          
-          echo "FreeBSD amd64"
-          env GOOS=freebsd GOARCH=amd64 go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-freebsd-amd64 github.com/devops-kung-fu/shs
-          echo "FreeBSD arm"
-          env GOOS=freebsd GOARCH=arm go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-freebsd-arm github.com/devops-kung-fu/shs
-          
-          echo "Linux amd64"
-          env GOOS=linux GOARCH=amd64 go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-linux-amd64 github.com/devops-kung-fu/shs
-          echo "Linux arm64"
-          env GOOS=linux GOARCH=arm64 go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-linux-arm64 github.com/devops-kung-fu/shs
-          
-          echo "NetBSD amd64"
-          env GOOS=netbsd GOARCH=amd64 go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-netbsd-amd64 github.com/devops-kung-fu/shs
-          echo "NetBSD arm"
-          env GOOS=netbsd GOARCH=arm go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-netbsd-arm github.com/devops-kung-fu/shs
-          
-          echo "OpenBSD amd64"
-          env GOOS=openbsd GOARCH=amd64 go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-openbsd-amd64 github.com/devops-kung-fu/shs
-          echo "OpenBSD arm"
-          env GOOS=openbsd GOARCH=arm go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-openbsd-arm github.com/devops-kung-fu/shs
-          
-          echo "Windows amd64"
-          env GOOS=windows GOARCH=amd64 go build -o build/shs-${{ steps.get_version.outputs.VERSION }}-windows-amd64 github.com/devops-kung-fu/shs
+          echo "${{ matrix.os }} ${{ matrix.arch }}"
+          env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
+        env:
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
 
-      # - name: Upload Darwin arm64
-      #   uses: gacts/upload-to-release@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-arm64'
-      #     type: 'application/octet-stream'
-      # - name: Upload Darwin amd64
-      #   uses: gacts/upload-to-release@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-amd64'
-      #     type: 'application/octet-stream'
+      - name: Build arm64 Assets
+        if: ${{ matrix.arch == "arm64" && matrix.os == "linux" }}
+        run: |
+          echo "${{ matrix.os }} ${{ matrix.arch }}"
+          env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
+        env:
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
 
-      - name: Upload Darwin amd64
+      - name: Build arm Assets
+        if: ${{ matrix.arch == "arm" && (matrix.os == "freebsd" || matrix.os == "netbsd" || matrix.os == "openbsd" }}
+        run: |
+          echo "${{ matrix.os }} ${{ matrix.arch }}"
+          env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
+        env:
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
+
+      - name: Upload amd64 Non-Windows
+        if: ${{ matrix.os != "windows" && matrix.arch == "amd64" }}
         run: |
           curl \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: $(file -b --mime-type build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-amd64)" \
-            --data-binary @build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-amd64 \
-            "${{ steps.upload_url.outputs.upload_url }}?name=$(basename build/shs-${{ steps.get_version.outputs.VERSION }}-darwin-amd64)"
+            -H "Content-Type: $(file -b --mime-type $FILE)" \
+            --data-binary @$FILE \
+            "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
+        env:
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }})
 
-      - name: Upload FreeBSD amd64
-        uses: gacts/upload-to-release@v1.0.1
+      - name: Upload amd64 Windows
+        if: ${{ matrix.os == "windows" && matrix.arch == "amd64" }}
+        run: |
+          curl \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: $(file -b --mime-type $FILE)" \
+            --data-binary @$FILE \
+            "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-freebsd-amd64'
-          type: 'application/octet-stream'
-      - name: Upload FreeBSD arm
-        uses: gacts/upload-to-release@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-freebsd-arm'
-          type: 'application/octet-stream'
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.exe
 
-      - name: Upload Linux amd64
-        uses: gacts/upload-to-release@v1.0.1
+      - name: Upload arm64
+        if: ${{ matrix.os == "linux" && matrix.arch == "arm64" }}
+        run: |
+          curl \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: $(file -b --mime-type $FILE)" \
+            --data-binary @$FILE \
+            "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-linux-amd64'
-          type: 'application/octet-stream'
-      - name: Upload Linux arm64
-        uses: gacts/upload-to-release@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-linux-arm64'
-          type: 'application/octet-stream'
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }})
 
-      - name: Upload NetBSD amd64
-        uses: gacts/upload-to-release@v1.0.1
+      - name: Upload arm
+        if: ${{ (matrix.os == "freebsd" || matrix.os == "netbsd" || matrix.os == "openbsd") && matrix.arch == "arm" }}
+        run: |
+          curl \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: $(file -b --mime-type $FILE)" \
+            --data-binary @$FILE \
+            "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-netbsd-amd64'
-          type: 'application/octet-stream'
-      - name: Upload NetBSD arm
-        uses: gacts/upload-to-release@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-netbsd-arm'
-          type: 'application/octet-stream'
-
-      - name: Upload OpenBSD amd64
-        uses: gacts/upload-to-release@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-openbsd-amd64'
-          type: 'application/octet-stream'
-      - name: Upload OpenBSD arm
-        uses: gacts/upload-to-release@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-openbsd-arm'
-          type: 'application/octet-stream'
-
-      - name: Upload Windows amd64
-        uses: gacts/upload-to-release@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          file: 'build/shs-${{ steps.get_version.outputs.VERSION }}-windows-amd64.exe'
-          type: 'application/octet-stream'
- 
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }})
