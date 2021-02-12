@@ -83,7 +83,7 @@ jobs:
           echo "${{ matrix.os }} ${{ matrix.arch }}"
           env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
         env:
-          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
 
       - name: Build arm64 Assets
         if: matrix.arch == 'arm64' && matrix.os == 'linux'
@@ -91,7 +91,7 @@ jobs:
           echo "${{ matrix.os }} ${{ matrix.arch }}"
           env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
         env:
-          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
 
       - name: Build arm Assets
         if: matrix.arch == 'arm' && (matrix.os == 'freebsd' || matrix.os == 'netbsd' || matrix.os == 'openbsd')
@@ -99,7 +99,7 @@ jobs:
           echo "${{ matrix.os }} ${{ matrix.arch }}"
           env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
         env:
-          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
 
       - name: Upload amd64 Non-Windows
         if: matrix.os != 'windows' && matrix.arch == 'amd64'
