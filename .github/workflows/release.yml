@@ -109,7 +109,7 @@ jobs:
             --data-binary @$FILE \
             "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
         env:
-          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }})
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
 
       - name: Upload amd64 Windows
         if: matrix.os == 'windows' && matrix.arch == 'amd64'
@@ -131,7 +131,7 @@ jobs:
             --data-binary @$FILE \
             "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
         env:
-          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }})
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
 
       - name: Upload arm
         if: (matrix.os == 'freebsd' || matrix.os == 'netbsd' || matrix.os == 'openbsd') && matrix.arch == 'arm'
@@ -142,4 +142,4 @@ jobs:
             --data-binary @$FILE \
             "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
         env:
-          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }})
+          FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
