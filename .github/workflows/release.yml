@@ -65,7 +65,7 @@ jobs:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
 
       - name: Build arm Assets
-        if: matrix.arch == 'arm' && (matrix.os == 'freebsd' || matrix.os == 'netbsd' || matrix.os == 'openbsd'
+        if: matrix.arch == 'arm' && (matrix.os == 'freebsd' || matrix.os == 'netbsd' || matrix.os == 'openbsd')
         run: |
           echo "${{ matrix.os }} ${{ matrix.arch }}"
           env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
