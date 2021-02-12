@@ -9,6 +9,9 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.upload_url.outputs.upload_url }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,6 +43,9 @@ jobs:
       matrix:
         os: ["darwin", "freebsd", "linux", "netbsd", "openbsd", "windows"]
         arch: ["amd64", "arm64", "arm"]
+
+    env:
+      UPLOAD_URL: ${{ needs.release.outputs.upload_url }}
 
     name: Build and Upload Assets
     runs-on: ubuntu-latest
@@ -108,7 +114,7 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: $(file -b --mime-type $FILE)" \
             --data-binary @$FILE \
-            "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
+            "$UPLOAD_URL?name=$(basename $FILE)"
         env:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
 
