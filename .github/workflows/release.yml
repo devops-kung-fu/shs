@@ -125,7 +125,7 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: $(file -b --mime-type $FILE)" \
             --data-binary @$FILE \
-            "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
+            "$UPLOAD_URL?name=$(basename $FILE)"
         env:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.exe
 
@@ -136,7 +136,7 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: $(file -b --mime-type $FILE)" \
             --data-binary @$FILE \
-            "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
+            "$UPLOAD_URL?name=$(basename $FILE)"
         env:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
 
@@ -147,6 +147,6 @@ jobs:
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Content-Type: $(file -b --mime-type $FILE)" \
             --data-binary @$FILE \
-            "${{ steps.upload_url.outputs.upload_url }}?name=$(basename $FILE)"
+            "$UPLOAD_URL?name=$(basename $FILE)"
         env:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}
