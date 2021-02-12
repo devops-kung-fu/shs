@@ -35,6 +35,7 @@ jobs:
         run: echo "${{ steps.upload_url.outputs.upload_url }}"
 
   build:
+    needs: release
     strategy:
       matrix:
         os: ["darwin", "freebsd", "linux", "netbsd", "openbsd", "windows"]
