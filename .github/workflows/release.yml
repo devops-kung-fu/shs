@@ -9,7 +9,6 @@ jobs:
   build:
     strategy:
       matrix:
-        targets: ["darwin-amd64", "freebsd-amd64", "linux-amd64", ]
         os: ["darwin", "freebsd", "linux", "netbsd", "openbsd", "windows"]
         arch: ["amd64", "arm64", "arm"]
 
@@ -58,7 +57,7 @@ jobs:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
 
       - name: Build arm64 Assets
-        if: matrix.arch == "arm64" && matrix.os == "linux"
+        if: matrix.arch == 'arm64' && matrix.os == 'linux'
         run: |
           echo "${{ matrix.os }} ${{ matrix.arch }}"
           env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
@@ -66,7 +65,7 @@ jobs:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
 
       - name: Build arm Assets
-        if: matrix.arch == "arm" && (matrix.os == "freebsd" || matrix.os == "netbsd" || matrix.os == "openbsd"
+        if: matrix.arch == 'arm' && (matrix.os == 'freebsd' || matrix.os == 'netbsd' || matrix.os == 'openbsd'
         run: |
           echo "${{ matrix.os }} ${{ matrix.arch }}"
           env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
@@ -74,7 +73,7 @@ jobs:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.arch }}-${{ matrix.arch }}
 
       - name: Upload amd64 Non-Windows
-        if: matrix.os != "windows" && matrix.arch == "amd64"
+        if: matrix.os != 'windows' && matrix.arch == 'amd64'
         run: |
           curl \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -85,7 +84,7 @@ jobs:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }})
 
       - name: Upload amd64 Windows
-        if: matrix.os == "windows" && matrix.arch == "amd64"
+        if: matrix.os == 'windows' && matrix.arch == 'amd64'
         run: |
           curl \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -96,7 +95,7 @@ jobs:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.exe
 
       - name: Upload arm64
-        if: matrix.os == "linux" && matrix.arch == "arm64"
+        if: matrix.os == 'linux' && matrix.arch == 'arm64'
         run: |
           curl \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -107,7 +106,7 @@ jobs:
           FILE: build/shs-${{ steps.get_version.outputs.VERSION }}-${{ matrix.os }}-${{ matrix.arch }})
 
       - name: Upload arm
-        if: (matrix.os == "freebsd" || matrix.os == "netbsd" || matrix.os == "openbsd") && matrix.arch == "arm"
+        if: (matrix.os == 'freebsd' || matrix.os == 'netbsd' || matrix.os == 'openbsd') && matrix.arch == 'arm'
         run: |
           curl \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
