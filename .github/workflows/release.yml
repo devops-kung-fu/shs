@@ -50,7 +50,7 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\/v/}
 
       - name: Build amd64 Assets
-        if: ${{ matrix.arch == "amd64" }}
+        if: matrix.arch == "amd64"
         run: |
           echo "${{ matrix.os }} ${{ matrix.arch }}"
           env GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} go build -o $FILE github.com/devops-kung-fu/shs
