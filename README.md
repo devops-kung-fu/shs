@@ -24,7 +24,6 @@ $ mv shs-x.x.x-linux-amd64 /usr/local/bin/shs
 
 - [calculate](#calculate)
 - [help](#help)
-- [shs](#shs)
 - [version](#version)
 
 ### calculate
@@ -83,28 +82,6 @@ Outputs usage information.
 
 ```shell
 $ shs -h
-Security Security Health Score Calculator
-
-Usage:
-  shs [command]
-
-Available Commands:
-  calculate   Calculates the Security Health Score
-  help        Help about any command
-
-Flags:
-  -h, --help      help for shs
-  -v, --version   version for shs
-
-Use "shs [command] --help" for more information about a command.
-```
-
-### shs
-
-Running just `shs` (if installed as above) will output usage information.
-
-```shell
-$ shs
 Security Security Health Score Calculator
 
 Usage:
