@@ -26,7 +26,7 @@ jobs:
           release_name: Release ${{ github.ref }}
           body: |
             This release has the following changes:
-            - README Updates.
+            - Weight Parameter.
           draft: false
           prerelease: false
 
