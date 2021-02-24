@@ -29,6 +29,5 @@ func interactiveMode() string {
 	fmt.Println("Temporal:")
 	fmt.Println("Environmental:")
 	fmt.Println()
-
 	return "ok"
 }
