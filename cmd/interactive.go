@@ -31,6 +31,19 @@ func getLetter(selection string) string {
 	return regexp.MustCompile(`[A-Z]+`).FindString(paren)
 }
 
+func confirmPrompt(label string) string {
+	prompt := promptui.Prompt{
+		Label: label,
+		IsConfirm: true,
+	}
+	promptResult, err := prompt.Run()
+	if err != nil {
+		fmt.Printf("Skipping Temporal Vector %v\n", err)
+		return ""
+	}
+	return promptResult
+}
+
 func menuSelect(label string, items []string) string {
 	prompt := promptui.Select{
 		Label: label,
@@ -90,6 +103,20 @@ func getMetricValue(key string) float64 {
 		"MA:H": 0.56,
 		"MA:L": 0.22,
 		"MA:N": 0,
+		"E:X": 1,
+		"E:H": 1,
+		"E:F": 0.97,
+		"E:P": 0.94,
+		"E:U": 0.91,
+		"RL:X": 1,
+		"RL:U": 1,
+		"RL:W": 0.97,
+		"RL:T": 0.96,
+		"RL:O": 0.95,
+		"RC:X": 1,
+		"RC:C": 1,
+		"RC:R": 0.96,
+		"RC:U": 0.92,
 	}
 	value, _ := metricValue[key]
 	return value
@@ -128,6 +155,14 @@ func baseScore(cvss string) float64 {
 			return math.Ceil(math.Min(1.08 * (impact + exploitability), 10) * 10) / 10
 		}
 	}
+}
+
+func temporalScore(cvss string, baseScore float64) float64 {
+	metricSections := regexp.MustCompile(`[A-Z]{1,2}:[A-Z]{1,2}`).FindAllString(cvss, -1)
+	e := getMetricValue(metricSections[0])
+	rl := getMetricValue(metricSections[1])
+	rc := getMetricValue(metricSections[2])
+	return math.Ceil((baseScore * e * rl * rc) * 10) / 10
 }
 
 func exploitabilityVector() string {
@@ -170,6 +205,22 @@ func impactVector() string {
 	return fmt.Sprintf("C:%s/I:%s/A:%s", confidentialityLetter, integrityLetter, availabilityLetter)
 }
 
+func temporalVector() string {
+	exploitCodeMaturity := menuSelect("Exploit Code Maturity (E)", []string{"Not Defined (X)", "High (H)", "Functional (F)", "Proof-of-Concept (P)", "Unproven (U)"})
+	fmt.Printf("  Exploit Code Maturity (E): %q\n", exploitCodeMaturity)
+	exploitCodeMaturityLetter := getLetter(exploitCodeMaturity)
+
+	remediationLevel := menuSelect("Remediation Level (RL)", []string{"Not Defined (X)", "Unavailable (U)", "Workaround (W)", "Temporary Fix (T)", "Official Fix (O)"})
+	fmt.Printf("  Remediation Level (RL): %q\n", remediationLevel)
+	remediationLevelLetter := getLetter(remediationLevel)
+
+	reportConfidence := menuSelect("Report Confidence (RC)", []string{"Not Defined (X)", "Confirmed (C)", "Reasonable (R)", "Unknown (U)"})
+	fmt.Printf("  Report Confidence (RC): %q\n", reportConfidence)
+	reportConfidenceLetter := getLetter(reportConfidence)
+
+	return fmt.Sprintf("E:%s/RL:%s/RC:%s", exploitCodeMaturityLetter, remediationLevelLetter, reportConfidenceLetter)
+} 
+
 func interactiveMode() string {
 	fmt.Println("CVSSv3 Builder")
 	fmt.Println()
@@ -181,9 +232,26 @@ func interactiveMode() string {
 	fmt.Println()
 	baseVector := fmt.Sprintf("CVSS:3.1/%s/%s", exploitabilityVectorString, impactVectorString)
 	fmt.Printf("Base Vector: %s\n", baseVector)
-	fmt.Printf("Base Score: %.2f\n", baseScore(baseVector))
+	baseScoreValue := baseScore(baseVector)
+	fmt.Printf("Base Score: %.2f\n", baseScoreValue)
 	fmt.Println()
-	fmt.Println("Temporal:")
+	continueTemporal := confirmPrompt("Continue with Temporal Vector?")
+	fmt.Printf("  %s\n", continueTemporal)
+	var temporalVectorString string = ""
+	if continueTemporal != "" {
+		fmt.Println()
+		fmt.Println("Temporal:")
+		temporalVectorString = temporalVector()
+	} else {
+		temporalVectorString = ""
+	}
+	baseTemporalVector := fmt.Sprintf("%s/%s", baseVector, temporalVectorString)
+	fmt.Println()
+	fmt.Printf("Base+Temporal Vector: %s\n", baseTemporalVector)
+	if temporalVectorString != "" {
+		fmt.Printf("Temporal Score: %.2f\n", temporalScore(temporalVectorString, baseScoreValue))
+	}
+	fmt.Println()
 	fmt.Println("Environmental:")
 	fmt.Println()
 	return "ok"
