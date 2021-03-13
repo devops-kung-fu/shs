@@ -165,6 +165,44 @@ func temporalScore(cvss string, baseScore float64) float64 {
 	return math.Ceil((baseScore * e * rl * rc) * 10) / 10
 }
 
+func environmentalScore(environmentalVector string, temporalVector string) float64 {
+	environmentalMetricSections := regexp.MustCompile(`[A-Z]{1,2}:[A-Z]{1,2}`).FindAllString(environmentalVector, -1)
+	cr := getMetricValue(environmentalMetricSections[0])
+	ir := getMetricValue(environmentalMetricSections[1])
+	ar := getMetricValue(environmentalMetricSections[2])
+	mav := getMetricValue(environmentalMetricSections[3])
+	mac := getMetricValue(environmentalMetricSections[4])
+	mpr := getMetricValue(environmentalMetricSections[5])
+	mui := getMetricValue(environmentalMetricSections[6])
+	ms := environmentalMetricSections[7]
+	mc := getMetricValue(environmentalMetricSections[8])
+	mi := getMetricValue(environmentalMetricSections[9])
+	ma := getMetricValue(environmentalMetricSections[10])
+	temporalMetricSections := regexp.MustCompile(`[A-Z]{1,2}:[A-Z]{1,2}`).FindAllString(temporalVector, -1)
+	e := getMetricValue(temporalMetricSections[0])
+	rl := getMetricValue(temporalMetricSections[1])
+	rc := getMetricValue(temporalMetricSections[2])
+	miss := math.Min(1 - ((1 - cr - mc) * (1 - ir - mi) * (1 - ar - ma)), 0.915)
+	var modifiedImpact float64
+	if ms == "MS:U" {
+		modifiedImpact = 6.42 * miss
+	} else if ms == "MS:C" {
+		modifiedImpact = 7.52 * (miss - 0.029) - 3.25 * math.Pow((miss * 0.9731 - 0.02), 13)
+	}
+	modifiedExploitability := 8.22 * mav * mac * mpr * mui
+	var environmentalScoreValue float64 = 0
+	if modifiedImpact <= 0 {
+		environmentalScoreValue = 0
+	} else {
+		if ms == "MS:U" {
+			environmentalScoreValue = math.Ceil(((math.Ceil(math.Min((modifiedImpact + modifiedExploitability), 10) * 10) / 10) * e * rl * rc) * 10) / 10
+		} else if ms == "MS:C" {
+			environmentalScoreValue = math.Ceil(((math.Ceil(math.Min(1.08 * (modifiedImpact + modifiedExploitability), 10) * 10) / 10) * e * rl * rc) * 10) / 10
+		} 
+	}
+	return environmentalScoreValue
+}
+
 func exploitabilityVector() string {
 	attackVector := menuSelect("Attack Vector (AV)", []string{"Network (N)", "Adjacent (A)", "Local (L)", "Physical (P)"})
 	fmt.Printf("  Attack Vector (AV): %q\n", attackVector)
@@ -219,7 +257,70 @@ func temporalVector() string {
 	reportConfidenceLetter := getLetter(reportConfidence)
 
 	return fmt.Sprintf("E:%s/RL:%s/RC:%s", exploitCodeMaturityLetter, remediationLevelLetter, reportConfidenceLetter)
-} 
+}
+
+func securityRequirements() string {
+	confidentialityRequirement := menuSelect("Confidentiality Requirement (CR)", []string{"Not Defined (X)", "High (H)", "Medium (M)", "Low (L)"})
+	fmt.Printf("  Confidentiality Requirement (CR): %q\n", confidentialityRequirement)
+	confidentialityRequirementLetter := getLetter(confidentialityRequirement)
+
+	integrityRequirement := menuSelect("Integrity Requirement (IR)", []string{"Not Defined (X)", "High (H)", "Medium (M)", "Low (L)"})
+	fmt.Printf("  Integrity Requirement (IR): %q\n", integrityRequirement)
+	integrityRequirementLetter := getLetter(integrityRequirement)
+
+	availabilityRequirement := menuSelect("Availability Requirement (AR)", []string{"Not Defined (X)", "High (H)", "Medium (M)", "Low (L)"})
+	fmt.Printf("  Availability Requirement (AR): %q\n", availabilityRequirement)
+	availabilityRequirementLetter := getLetter(availabilityRequirement)
+
+	return fmt.Sprintf("CR:%s/IR:%s/AR:%s", confidentialityRequirementLetter, integrityRequirementLetter, availabilityRequirementLetter)
+}
+
+func modifiedBaseMetrics() string {
+	modifiedAttackVector := menuSelect("Modified Attack Vector (MAV)", []string{"Not Defined (X)", "Network (N)", "Adjacent (A)", "Local (L)", "Physical (P)"})
+	fmt.Printf("  Modified Attack Vector (MAV): %q\n", modifiedAttackVector)
+	modifiedAttackVectorLetter := getLetter(modifiedAttackVector)
+
+	modifiedAttackComplexity := menuSelect("Modified Attack Complexity (MAC)", []string{"Not Defined (X)", "Low (L)", "High (H)"})
+	fmt.Printf("  Modified Attack Complexity (MAC): %q\n", modifiedAttackComplexity)
+	modifiedAttackComplexityLetter := getLetter(modifiedAttackComplexity)
+	
+	modifiedPrivilegesRequired := menuSelect("Modified Privileges Required (MPR)", []string{"Not Defined (X)", "None (N)", "Low (L)", "High (H)"})
+	fmt.Printf("  Modified Privileges Required (MPR): %q\n", modifiedPrivilegesRequired)
+	modifiedPrivilegesRequiredLetter := getLetter(modifiedPrivilegesRequired)
+
+	modifiedUserInteraction := menuSelect("Modified User Interaction (MUI)", []string{"Not Defined (X)", "None (N)", "Required (R)"})
+	fmt.Printf("  Modified User Interaction (MUI): %q\n", modifiedUserInteraction)
+	modifiedUserInteractionLetter := getLetter(modifiedUserInteraction)
+
+	modifiedScope := menuSelect("Modified Scope (MS)", []string{"Not Defined (X)", "Unchanged (U)", "Changed (C)"})
+	fmt.Printf(" Modified Scope (MS): %q\n", modifiedScope)
+	modifiedScopeLetter := getLetter(modifiedScope)
+
+	modifiedConfidentiality := menuSelect("Modified Confidentiality (MC)", []string{"Not Defined (X)", "High (H)", "Low (L)", "None (N)"})
+	fmt.Printf("  Modified Confidentiality (MC): %q\n", modifiedConfidentiality)
+	modifiedConfidentialityLetter := getLetter(modifiedConfidentiality)
+
+	modifiedIntegrity := menuSelect("Modified Integrity (MI)", []string{"Not Defined (X)", "High (H)", "Low (L)", "None (N)"})
+	fmt.Printf("  Modified Integrity (MI): %q\n", modifiedIntegrity)
+	modifiedIntegrityLetter := getLetter(modifiedIntegrity)
+
+	modifiedAvailability := menuSelect("Modified Availability (MA)", []string{"Not Defined (X)", "High (H)", "Low (L)", "None (N)"})
+	fmt.Printf("  Modified Availability (MA): %q\n", modifiedAvailability)
+	modifiedAvailabilityLetter := getLetter(modifiedAvailability)
+
+	return fmt.Sprintf(
+		"MAV:%s/MAC:%s/MPR:%s/MUI:%s/MS:%s/MC:%s/MI:%s/MA:%s",
+		modifiedAttackVectorLetter,
+		modifiedAttackComplexityLetter,
+		modifiedPrivilegesRequiredLetter,
+		modifiedUserInteractionLetter,
+		modifiedScopeLetter,
+		modifiedConfidentialityLetter,
+		modifiedIntegrityLetter,
+		modifiedAvailabilityLetter,
+	)
+
+}
 
 func interactiveMode() string {
 	fmt.Println("CVSSv3 Builder")
@@ -235,24 +336,20 @@ func interactiveMode() string {
 	baseScoreValue := baseScore(baseVector)
 	fmt.Printf("Base Score: %.2f\n", baseScoreValue)
 	fmt.Println()
-	continueTemporal := confirmPrompt("Continue with Temporal Vector?")
-	fmt.Printf("  %s\n", continueTemporal)
-	var temporalVectorString string = ""
-	if continueTemporal != "" {
-		fmt.Println()
-		fmt.Println("Temporal:")
-		temporalVectorString = temporalVector()
-	} else {
-		temporalVectorString = ""
-	}
+	fmt.Println("Temporal:")
+	temporalVectorString := temporalVector()
 	baseTemporalVector := fmt.Sprintf("%s/%s", baseVector, temporalVectorString)
 	fmt.Println()
 	fmt.Printf("Base+Temporal Vector: %s\n", baseTemporalVector)
-	if temporalVectorString != "" {
-		fmt.Printf("Temporal Score: %.2f\n", temporalScore(temporalVectorString, baseScoreValue))
-	}
+	fmt.Printf("Temporal Score: %.2f\n", temporalScore(temporalVectorString, baseScoreValue))
 	fmt.Println()
 	fmt.Println("Environmental:")
+	securityRequirementsString := securityRequirements()
+	modifiedBaseMetricsString := modifiedBaseMetrics()
+	environmentalVectorString := fmt.Sprintf("%s/%s", securityRequirementsString, modifiedBaseMetricsString)
+	baseTemporalEnvironmentalVector := fmt.Sprintf("%s/%s", baseTemporalVector, environmentalVectorString)
 	fmt.Println()
+	fmt.Printf("Base+Temporal+Environmental Vector: %s\n", baseTemporalEnvironmentalVector)
+ 	fmt.Printf("Environmental Score: %.2f\n", environmentalScore(environmentalVectorString, temporalVectorString))
 	return "ok"
 }
