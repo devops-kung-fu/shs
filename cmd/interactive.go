@@ -16,7 +16,7 @@ var (
 		Short: "interactive mode",
 		Long:  `Builds a CVSSv3 vector based on user input.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("CVSSv3:", interactiveMode())
+			interactiveMode()
 		},
 	}
 )
@@ -203,25 +203,39 @@ func environmentalScore(environmentalVector string, temporalVector string) float
 	return environmentalScoreValue
 }
 
+func qualitativeSeverity(score float64) string {
+	if score == 0 {
+		return "None"
+	} else if (score > 0 && score < 4) {
+		return "Low"
+	} else if (score >= 4 && score < 7) {
+		return "Medium"
+	} else if (score >= 7 && score < 9) {
+		return "High"
+	} else {
+		return "Critical"
+	}
+}
+
 func exploitabilityVector() string {
 	attackVector := menuSelect("Attack Vector (AV)", []string{"Network (N)", "Adjacent (A)", "Local (L)", "Physical (P)"})
-	fmt.Printf("  Attack Vector (AV): %q\n", attackVector)
+	fmt.Printf("  Attack Vector (AV): %s\n", attackVector)
 	attackVectorLetter := getLetter(attackVector)
 
 	attackComplexity := menuSelect("Attack Complexity (AC)", []string{"Low (L)", "High (H)"})
-	fmt.Printf("  Attack Complexity (AC): %q\n", attackComplexity)
+	fmt.Printf("  Attack Complexity (AC): %s\n", attackComplexity)
 	attackComplexityLetter := getLetter(attackComplexity)
 	
 	privilegesRequired := menuSelect("Privileges Required (PR)", []string{"None (N)", "Low (L)", "High (H)"})
-	fmt.Printf("  Privileges Required (PR): %q\n", privilegesRequired)
+	fmt.Printf("  Privileges Required (PR): %s\n", privilegesRequired)
 	privilegesRequiredLetter := getLetter(privilegesRequired)
 
 	userInteraction := menuSelect("User Interaction (UI)", []string{"None (N)", "Required (R)"})
-	fmt.Printf("  User Interaction (UI): %q\n", userInteraction)
+	fmt.Printf("  User Interaction (UI): %s\n", userInteraction)
 	userInteractionLetter := getLetter(userInteraction)
 
 	scope := menuSelect("Scope (S)", []string{"Unchanged (U)", "Changed (C)"})
-	fmt.Printf(" Scope (S): %q\n", scope)
+	fmt.Printf(" Scope (S): %s\n", scope)
 	scopeLetter := getLetter(scope)
 
 	return fmt.Sprintf("AV:%s/AC:%s/PR:%s/UI:%s/S:%s", attackVectorLetter, attackComplexityLetter, privilegesRequiredLetter, userInteractionLetter, scopeLetter)
@@ -229,15 +243,15 @@ func exploitabilityVector() string {
 
 func impactVector() string {
 	confidentiality := menuSelect("Confidentiality (C)", []string{"High (H)", "Low (L)", "None (N)"})
-	fmt.Printf("  Confidentiality (C): %q\n", confidentiality)
+	fmt.Printf("  Confidentiality (C): %s\n", confidentiality)
 	confidentialityLetter := getLetter(confidentiality)
 
 	integrity := menuSelect("Integrity (I)", []string{"High (H)", "Low (L)", "None (N)"})
-	fmt.Printf("  Integrity (I): %q\n", integrity)
+	fmt.Printf("  Integrity (I): %s\n", integrity)
 	integrityLetter := getLetter(integrity)
 
 	availability := menuSelect("Availability (A)", []string{"High (H)", "Low (L)", "None (N)"})
-	fmt.Printf("  Availability (A): %q\n", availability)
+	fmt.Printf("  Availability (A): %s\n", availability)
 	availabilityLetter := getLetter(availability)
 
 	return fmt.Sprintf("C:%s/I:%s/A:%s", confidentialityLetter, integrityLetter, availabilityLetter)
@@ -245,15 +259,15 @@ func impactVector() string {
 
 func temporalVector() string {
 	exploitCodeMaturity := menuSelect("Exploit Code Maturity (E)", []string{"Not Defined (X)", "High (H)", "Functional (F)", "Proof-of-Concept (P)", "Unproven (U)"})
-	fmt.Printf("  Exploit Code Maturity (E): %q\n", exploitCodeMaturity)
+	fmt.Printf("  Exploit Code Maturity (E): %s\n", exploitCodeMaturity)
 	exploitCodeMaturityLetter := getLetter(exploitCodeMaturity)
 
 	remediationLevel := menuSelect("Remediation Level (RL)", []string{"Not Defined (X)", "Unavailable (U)", "Workaround (W)", "Temporary Fix (T)", "Official Fix (O)"})
-	fmt.Printf("  Remediation Level (RL): %q\n", remediationLevel)
+	fmt.Printf("  Remediation Level (RL): %s\n", remediationLevel)
 	remediationLevelLetter := getLetter(remediationLevel)
 
 	reportConfidence := menuSelect("Report Confidence (RC)", []string{"Not Defined (X)", "Confirmed (C)", "Reasonable (R)", "Unknown (U)"})
-	fmt.Printf("  Report Confidence (RC): %q\n", reportConfidence)
+	fmt.Printf("  Report Confidence (RC): %s\n", reportConfidence)
 	reportConfidenceLetter := getLetter(reportConfidence)
 
 	return fmt.Sprintf("E:%s/RL:%s/RC:%s", exploitCodeMaturityLetter, remediationLevelLetter, reportConfidenceLetter)
@@ -261,15 +275,15 @@ func temporalVector() string {
 
 func securityRequirements() string {
 	confidentialityRequirement := menuSelect("Confidentiality Requirement (CR)", []string{"Not Defined (X)", "High (H)", "Medium (M)", "Low (L)"})
-	fmt.Printf("  Confidentiality Requirement (CR): %q\n", confidentialityRequirement)
+	fmt.Printf("  Confidentiality Requirement (CR): %s\n", confidentialityRequirement)
 	confidentialityRequirementLetter := getLetter(confidentialityRequirement)
 
 	integrityRequirement := menuSelect("Integrity Requirement (IR)", []string{"Not Defined (X)", "High (H)", "Medium (M)", "Low (L)"})
-	fmt.Printf("  Integrity Requirement (IR): %q\n", integrityRequirement)
+	fmt.Printf("  Integrity Requirement (IR): %s\n", integrityRequirement)
 	integrityRequirementLetter := getLetter(integrityRequirement)
 
 	availabilityRequirement := menuSelect("Availability Requirement (AR)", []string{"Not Defined (X)", "High (H)", "Medium (M)", "Low (L)"})
-	fmt.Printf("  Availability Requirement (AR): %q\n", availabilityRequirement)
+	fmt.Printf("  Availability Requirement (AR): %s\n", availabilityRequirement)
 	availabilityRequirementLetter := getLetter(availabilityRequirement)
 
 	return fmt.Sprintf("CR:%s/IR:%s/AR:%s", confidentialityRequirementLetter, integrityRequirementLetter, availabilityRequirementLetter)
@@ -277,35 +291,35 @@ func securityRequirements() string {
 
 func modifiedBaseMetrics() string {
 	modifiedAttackVector := menuSelect("Modified Attack Vector (MAV)", []string{"Not Defined (X)", "Network (N)", "Adjacent (A)", "Local (L)", "Physical (P)"})
-	fmt.Printf("  Modified Attack Vector (MAV): %q\n", modifiedAttackVector)
+	fmt.Printf("  Modified Attack Vector (MAV): %s\n", modifiedAttackVector)
 	modifiedAttackVectorLetter := getLetter(modifiedAttackVector)
 
 	modifiedAttackComplexity := menuSelect("Modified Attack Complexity (MAC)", []string{"Not Defined (X)", "Low (L)", "High (H)"})
-	fmt.Printf("  Modified Attack Complexity (MAC): %q\n", modifiedAttackComplexity)
+	fmt.Printf("  Modified Attack Complexity (MAC): %s\n", modifiedAttackComplexity)
 	modifiedAttackComplexityLetter := getLetter(modifiedAttackComplexity)
 	
 	modifiedPrivilegesRequired := menuSelect("Modified Privileges Required (MPR)", []string{"Not Defined (X)", "None (N)", "Low (L)", "High (H)"})
-	fmt.Printf("  Modified Privileges Required (MPR): %q\n", modifiedPrivilegesRequired)
+	fmt.Printf("  Modified Privileges Required (MPR): %s\n", modifiedPrivilegesRequired)
 	modifiedPrivilegesRequiredLetter := getLetter(modifiedPrivilegesRequired)
 
 	modifiedUserInteraction := menuSelect("Modified User Interaction (MUI)", []string{"Not Defined (X)", "None (N)", "Required (R)"})
-	fmt.Printf("  Modified User Interaction (MUI): %q\n", modifiedUserInteraction)
+	fmt.Printf("  Modified User Interaction (MUI): %s\n", modifiedUserInteraction)
 	modifiedUserInteractionLetter := getLetter(modifiedUserInteraction)
 
 	modifiedScope := menuSelect("Modified Scope (MS)", []string{"Not Defined (X)", "Unchanged (U)", "Changed (C)"})
-	fmt.Printf(" Modified Scope (MS): %q\n", modifiedScope)
+	fmt.Printf("  Modified Scope (MS): %s\n", modifiedScope)
 	modifiedScopeLetter := getLetter(modifiedScope)
 
 	modifiedConfidentiality := menuSelect("Modified Confidentiality (MC)", []string{"Not Defined (X)", "High (H)", "Low (L)", "None (N)"})
-	fmt.Printf("  Modified Confidentiality (MC): %q\n", modifiedConfidentiality)
+	fmt.Printf("  Modified Confidentiality (MC): %s\n", modifiedConfidentiality)
 	modifiedConfidentialityLetter := getLetter(modifiedConfidentiality)
 
 	modifiedIntegrity := menuSelect("Modified Integrity (MI)", []string{"Not Defined (X)", "High (H)", "Low (L)", "None (N)"})
-	fmt.Printf("  Modified Integrity (MI): %q\n", modifiedIntegrity)
+	fmt.Printf("  Modified Integrity (MI): %s\n", modifiedIntegrity)
 	modifiedIntegrityLetter := getLetter(modifiedIntegrity)
 
 	modifiedAvailability := menuSelect("Modified Availability (MA)", []string{"Not Defined (X)", "High (H)", "Low (L)", "None (N)"})
-	fmt.Printf("  Modified Availability (MA): %q\n", modifiedAvailability)
+	fmt.Printf("  Modified Availability (MA): %s\n", modifiedAvailability)
 	modifiedAvailabilityLetter := getLetter(modifiedAvailability)
 
 	return fmt.Sprintf(
@@ -322,7 +336,7 @@ func modifiedBaseMetrics() string {
 
 }
 
-func interactiveMode() string {
+func interactiveMode() {
 	fmt.Println("CVSSv3 Builder")
 	fmt.Println()
 	fmt.Println("Base Metrics")
@@ -335,13 +349,16 @@ func interactiveMode() string {
 	fmt.Printf("Base Vector: %s\n", baseVector)
 	baseScoreValue := baseScore(baseVector)
 	fmt.Printf("Base Score: %.2f\n", baseScoreValue)
+	fmt.Printf("Severity: %s\n", qualitativeSeverity(baseScoreValue))
 	fmt.Println()
 	fmt.Println("Temporal:")
 	temporalVectorString := temporalVector()
 	baseTemporalVector := fmt.Sprintf("%s/%s", baseVector, temporalVectorString)
 	fmt.Println()
 	fmt.Printf("Base+Temporal Vector: %s\n", baseTemporalVector)
-	fmt.Printf("Temporal Score: %.2f\n", temporalScore(temporalVectorString, baseScoreValue))
+	temporalScoreValue := temporalScore(temporalVectorString, baseScoreValue)
+	fmt.Printf("Temporal Score: %.2f\n", temporalScoreValue)
+	fmt.Printf("Severity: %s\n", qualitativeSeverity(temporalScoreValue))
 	fmt.Println()
 	fmt.Println("Environmental:")
 	securityRequirementsString := securityRequirements()
@@ -350,6 +367,8 @@ func interactiveMode() string {
 	baseTemporalEnvironmentalVector := fmt.Sprintf("%s/%s", baseTemporalVector, environmentalVectorString)
 	fmt.Println()
 	fmt.Printf("Base+Temporal+Environmental Vector: %s\n", baseTemporalEnvironmentalVector)
- 	fmt.Printf("Environmental Score: %.2f\n", environmentalScore(environmentalVectorString, temporalVectorString))
-	return "ok"
+	environmentalScoreValue := environmentalScore(environmentalVectorString, temporalVectorString)
+ 	fmt.Printf("Environmental Score: %.2f\n", environmentalScoreValue)
+	fmt.Printf("Severity: %s\n", qualitativeSeverity(environmentalScoreValue))
+
 }
