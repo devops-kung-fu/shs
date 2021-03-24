@@ -19,10 +19,6 @@ jobs:
         run: |
           go test -v -coverprofile=coverage.out ./...
           go tool cover -func=coverage.out
-      - name: CodeCov
-        run: bash <(curl -s https://codecov.io/bash)
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Build
         run: go build
       - name: Vet

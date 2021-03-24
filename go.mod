@@ -1,6 +1,6 @@
 module github.com/devops-kung-fu/shs
 
-go 1.15
+go 1.16
 
 require (
 	github.com/devops-kung-fu/go-shs/calculate v0.1.2
