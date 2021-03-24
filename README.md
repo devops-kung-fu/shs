@@ -1,4 +1,9 @@
-# SHS
+![](img/shs128x128.png)
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/devops-kung-fu/shs)](https://goreportcard.com/report/github.com/devops-kung-fu/shs)  ![GitHub release (latest by date)](https://img.shields.io/github/v/release/devops-kung-fu/shs)
+
+
+# Security Health Score (SHS)
 
 A command line interface that calculates the security health of an application, system, or code base and returns a single score.
 

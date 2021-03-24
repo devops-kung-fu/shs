@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/devops-kung-fu/go-shs/calculate"
+	"github.com/spf13/cobra"
 )
 
 // calculateCmd represents the calculate command
