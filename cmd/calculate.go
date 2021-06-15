@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	api "github.com/devops-kung-fu/go-shs/calculate"
+	"github.com/devops-kung-fu/go-shs/api"
 	"github.com/spf13/cobra"
 )
 
