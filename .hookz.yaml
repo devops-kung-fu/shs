@@ -1,4 +1,4 @@
-  version: 2.0
+  version: 2.2
   hooks:
     - type: pre-commit
       actions:
@@ -14,11 +14,13 @@
         - name: "Run gofmt to format the code"
           exec: gofmt
           args: ["-w", "*/*.go"]
+        - name: Hinge
+          url: https://github.com/devops-kung-fu/hinge/releases/download/v0.0.9/hinge-0.0.9-linux-amd64
+          args: ["."]
+        - name: "cyclone-dx: Generate a Software Bill of Materials (SBoM)"
+          exec: cyclonedx-gomod
+          args: ["-json", "-output", "sbom.json", "-std", "-licenses"]
         - name: "Add all changed files during the pre-commit stage"
           exec: git
           args: ["add", "."]
-    - type: post-commit
-      actions:
-      - name: "Post Echo"
-        exec: echo
-        args: ["-e", "Done!"]
+        
