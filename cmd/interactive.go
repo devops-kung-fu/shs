@@ -206,7 +206,7 @@ func interactiveMode() {
 	baseTemporalEnvironmentalVector := fmt.Sprintf("%s/%s", baseTemporalVector, environmentalVectorString)
 	fmt.Println()
 	fmt.Printf("Base+Temporal+Environmental Vector: %s\n", baseTemporalEnvironmentalVector)
-	environmentalScoreValue := api.EnvironmentalScore(environmentalVectorString, temporalVectorString)
+	environmentalScoreValue := api.EnvironmentalScore(fmt.Sprintf("%s/%s", environmentalVectorString, temporalVectorString))
 	fmt.Printf("Environmental Score: %.2f\n", environmentalScoreValue)
 	fmt.Printf("Severity: %s\n", api.QualitativeSeverity(environmentalScoreValue))
 

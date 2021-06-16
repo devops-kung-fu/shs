@@ -1,10 +1,10 @@
 {
   "bomFormat": "CycloneDX",
   "specVersion": "1.2",
-  "serialNumber": "urn:uuid:e7fca506-edc3-4f9d-8076-1ba7ff54d4e5",
+  "serialNumber": "urn:uuid:4088e0e1-679f-4f07-b7e7-c9fdd3215525",
   "version": 1,
   "metadata": {
-    "timestamp": "2021-06-15T19:54:47-04:00",
+    "timestamp": "2021-06-16T10:10:27-04:00",
     "tools": [
       {
         "vendor": "CycloneDX",
@@ -31,11 +31,11 @@
       }
     ],
     "component": {
-      "bom-ref": "pkg:golang/github.com/devops-kung-fu/shs@v0.0.0-20210615185754-aef7949abfd2",
+      "bom-ref": "pkg:golang/github.com/devops-kung-fu/shs@v0.0.0-20210615195435-dba189f6ba4d",
       "type": "application",
       "name": "github.com/devops-kung-fu/shs",
-      "version": "v0.0.0-20210615185754-aef7949abfd2",
-      "purl": "pkg:golang/github.com/devops-kung-fu/shs@v0.0.0-20210615185754-aef7949abfd2",
+      "version": "v0.0.0-20210615195435-dba189f6ba4d",
+      "purl": "pkg:golang/github.com/devops-kung-fu/shs@v0.0.0-20210615195435-dba189f6ba4d",
       "externalReferences": [
         {
           "url": "https://github.com/devops-kung-fu/shs",
@@ -66,18 +66,18 @@
       ]
     },
     {
-      "bom-ref": "pkg:golang/github.com/devops-kung-fu/go-shs@v0.2.2",
+      "bom-ref": "pkg:golang/github.com/devops-kung-fu/go-shs@v0.2.3",
       "type": "library",
       "name": "github.com/devops-kung-fu/go-shs",
-      "version": "v0.2.2",
+      "version": "v0.2.3",
       "scope": "required",
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "07bd637150acc69f0ab22c0b45b7f86f256ac00390625152cf3d220f9e8e096f"
+          "content": "f14e8c63476717e31883f69341b8aac2f2bbec5bbc2bb32126da8133a7bec0d9"
         }
       ],
-      "purl": "pkg:golang/github.com/devops-kung-fu/go-shs@v0.2.2",
+      "purl": "pkg:golang/github.com/devops-kung-fu/go-shs@v0.2.3",
       "externalReferences": [
         {
           "url": "https://github.com/devops-kung-fu/go-shs",
@@ -286,18 +286,18 @@
       ]
     },
     {
-      "bom-ref": "pkg:golang/golang.org/x/sys@v0.0.0-20210615035016-665e8c7367d1",
+      "bom-ref": "pkg:golang/golang.org/x/sys@v0.0.0-20210616094352-59db8d763f22",
       "type": "library",
       "name": "golang.org/x/sys",
-      "version": "v0.0.0-20210615035016-665e8c7367d1",
+      "version": "v0.0.0-20210616094352-59db8d763f22",
       "scope": "required",
       "hashes": [
         {
           "alg": "SHA-256",
-          "content": "4ab37e297f00aedfd27f81cd8fa65ccf4e86ed5133fbbc3db5d5d33ce67bfa5e"
+          "content": "46acada57191d6254d5fba6c8c1ddf7fccbbb0d1629d516f931d5cf128c1922a"
         }
       ],
-      "purl": "pkg:golang/golang.org/x/sys@v0.0.0-20210615035016-665e8c7367d1"
+      "purl": "pkg:golang/golang.org/x/sys@v0.0.0-20210616094352-59db8d763f22"
     },
     {
       "bom-ref": "pkg:golang/std@1.16.2",
@@ -328,7 +328,7 @@
       "ref": "pkg:golang/github.com/chzyer/readline@v0.0.0-20180603132655-2972be24d48e"
     },
     {
-      "ref": "pkg:golang/github.com/devops-kung-fu/go-shs@v0.2.2",
+      "ref": "pkg:golang/github.com/devops-kung-fu/go-shs@v0.2.3",
       "dependsOn": [
         "pkg:golang/github.com/spiegel-im-spiegel/go-cvss@v0.4.0"
       ]
@@ -345,7 +345,7 @@
     {
       "ref": "pkg:golang/github.com/manifoldco/promptui@v0.8.0",
       "dependsOn": [
-        "pkg:golang/golang.org/x/sys@v0.0.0-20210615035016-665e8c7367d1",
+        "pkg:golang/golang.org/x/sys@v0.0.0-20210616094352-59db8d763f22",
         "pkg:golang/github.com/mattn/go-isatty@v0.0.13",
         "pkg:golang/github.com/mattn/go-colorable@v0.1.8",
         "pkg:golang/github.com/lunixbochs/vtclean@v1.0.0",
@@ -356,14 +356,14 @@
     {
       "ref": "pkg:golang/github.com/mattn/go-colorable@v0.1.8",
       "dependsOn": [
-        "pkg:golang/golang.org/x/sys@v0.0.0-20210615035016-665e8c7367d1",
+        "pkg:golang/golang.org/x/sys@v0.0.0-20210616094352-59db8d763f22",
         "pkg:golang/github.com/mattn/go-isatty@v0.0.13"
       ]
     },
     {
       "ref": "pkg:golang/github.com/mattn/go-isatty@v0.0.13",
       "dependsOn": [
-        "pkg:golang/golang.org/x/sys@v0.0.0-20210615035016-665e8c7367d1"
+        "pkg:golang/golang.org/x/sys@v0.0.0-20210616094352-59db8d763f22"
       ]
     },
     {
@@ -386,18 +386,18 @@
       ]
     },
     {
-      "ref": "pkg:golang/golang.org/x/sys@v0.0.0-20210615035016-665e8c7367d1"
+      "ref": "pkg:golang/golang.org/x/sys@v0.0.0-20210616094352-59db8d763f22"
     },
     {
-      "ref": "pkg:golang/github.com/devops-kung-fu/shs@v0.0.0-20210615185754-aef7949abfd2",
+      "ref": "pkg:golang/github.com/devops-kung-fu/shs@v0.0.0-20210615195435-dba189f6ba4d",
       "dependsOn": [
-        "pkg:golang/github.com/devops-kung-fu/go-shs@v0.2.2",
+        "pkg:golang/github.com/devops-kung-fu/go-shs@v0.2.3",
         "pkg:golang/github.com/lunixbochs/vtclean@v1.0.0",
         "pkg:golang/github.com/manifoldco/promptui@v0.8.0",
         "pkg:golang/github.com/mattn/go-colorable@v0.1.8",
         "pkg:golang/github.com/mattn/go-isatty@v0.0.13",
         "pkg:golang/github.com/spf13/cobra@v1.1.3",
-        "pkg:golang/golang.org/x/sys@v0.0.0-20210615035016-665e8c7367d1",
+        "pkg:golang/golang.org/x/sys@v0.0.0-20210616094352-59db8d763f22",
         "pkg:golang/std@1.16.2"
       ]
     },
